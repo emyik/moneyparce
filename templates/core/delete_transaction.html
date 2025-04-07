@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Delete Transaction</h2>
+
+<div class="alert alert-warning">
+  <p>Are you sure you want to delete this transaction?</p>
+  <ul>
+    <li><strong>Type:</strong> {{ transaction.type }}</li>
+    <li><strong>Amount:</strong> ${{ transaction.amount }}</li>
+    <li><strong>Date:</strong> {{ transaction.date }}</li>
+    <li><strong>Category:</strong> {{ transaction.category }}</li>
+  </ul>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Yes, delete it</button>
+  <a href="{% url 'transaction_detail' transaction.pk %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

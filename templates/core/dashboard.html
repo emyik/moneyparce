@@ -1,26 +1,76 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Dashboard</h2>
-<p>Welcome, {{ user.username }}!</p>
+<h2 class="mb-4">Welcome, {{ user.username }}!</h2>
 
-<a href="{% url 'add_transaction' %}">➕ Add Transaction</a>
 
-<h3>Transactions</h3>
-<ul>
-  {% for t in transactions %}
-    <li>{{ t.date }} - {{ t.type }} - ${{ t.amount }} - {{ t.category }}</li>
-  {% empty %}
-    <li>No transactions yet.</li>
-  {% endfor %}
-</ul>
+<div class="mb-4">
+  <a href="{% url 'add_transaction' %}" class="btn btn-success me-2">➕ Add Transaction</a>
+  <a href="{% url 'add_budget' %}" class="btn btn-success me-2">➕ Add Budget</a>
+  <a href="{% url 'category_manager' %}" class="btn btn-outline-secondary">🗂️ Manage Categories</a>
+  <a href="{% url 'delete_account' %}" class="btn btn-outline-danger">Delete My Account</a>
+</div>
 
-<h3>Budgets</h3>
-<ul>
-  {% for b in budgets %}
-    <li>{{ b.category.name }}: ${{ b.amount }}</li>
-  {% empty %}
-    <li>No budgets yet.</li>
-  {% endfor %}
-</ul>
+
+<div class="row">
+  <!-- Transactions -->
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        Transactions
+      </div>
+      <ul class="list-group list-group-flush">
+        {% for t in transactions %}
+          <li class="list-group-item">
+            <a href="{% url 'transaction_detail' t.pk %}" class="text-decoration-none">
+              <strong>{{ t.type|title }}:</strong> ${{ t.amount }} on {{ t.date }}
+              <br><small class="text-muted">{{ t.category }}</small>
+            </a>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">No transactions yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <form method="get" class="row mb-4">
+      <div class="col-md-6">
+        <label for="category" class="form-label">Filter by Category</label>
+        <select name="category" id="category" class="form-select" onchange="this.form.submit()">
+          <option value="">All Categories</option>
+          {% for category in categories %}
+            <option value="{{ category.id }}" {% if category.id|stringformat:"s" == selected_category_id %}selected{% endif %}>
+              {{ category.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    </form>
+    {% if selected_category_id %}
+      <a href="{% url 'dashboard' %}" class="btn btn-sm btn-outline-secondary mt-2">Clear Filter</a>
+    {% endif %}
+  </div>
+
+  <!-- Budgets -->
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header bg-warning">
+        Budgets
+      </div>
+      <ul class="list-group list-group-flush">
+        {% for b in budgets %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span><strong>{{ b.category.name }}:</strong> ${{ b.amount }}</span>
+            <span>
+              <a href="{% url 'edit_budget' b.pk %}" class="btn btn-sm btn-outline-primary me-2">✏️</a>
+              <a href="{% url 'delete_budget' b.pk %}" class="btn btn-sm btn-danger">🗑️</a>
+            </span>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">No budgets set.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Delete Budget</h2>
+
+<div class="alert alert-warning">
+  <p>Are you sure you want to delete the budget for <strong>{{ budget.category.name }}</strong>?</p>
+  <p><strong>Amount:</strong> ${{ budget.amount }}</p>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Yes, delete it</button>
+  <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

@@ -6,6 +6,9 @@ SECRET_KEY = 'your-secret-key'
 DEBUG = True
 ALLOWED_HOSTS = []
 
+LOGOUT_REDIRECT_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

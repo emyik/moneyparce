@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Transaction Details</h2>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">{{ transaction.type|title }}</h5>
+    <p class="card-text"><strong>Amount:</strong> ${{ transaction.amount }}</p>
+    <p class="card-text"><strong>Date:</strong> {{ transaction.date }}</p>
+    <p class="card-text"><strong>Category:</strong> {{ transaction.category }}</p>
+    <p class="card-text"><strong>Description:</strong><br>{{ transaction.description|default:"—" }}</p>
+  </div>
+</div>
+
+<a href="{% url 'edit_transaction' transaction.pk %}" class="btn btn-outline-primary me-2">✏️ Edit Transaction</a>
+<a href="{% url 'delete_transaction' transaction.pk %}" class="btn btn-outline-primary me-2">🗑️ Delete Transaction</a>
+
+<a href="{% url 'dashboard' %}" class="btn btn-link mt-3">← Back to Dashboard</a>
+{% endblock %}

@@ -1,5 +1,40 @@
-<h2>Login</h2>
-<form method="post">{% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
-</form>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="text-center mb-4">Log in to MoneyParce</h2>
+
+        {% if form.errors %}
+          <div class="alert alert-danger">
+            Invalid username or password. Please try again.
+          </div>
+        {% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label for="id_username" class="form-label">Username</label>
+            <input type="text" name="username" class="form-control" id="id_username" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="id_password" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" id="id_password" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Log In</button>
+        </form>
+
+        <div class="text-center mt-3">
+          <p>Don’t have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+          <p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
