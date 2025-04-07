@@ -1,0 +1,16 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MoneyParce</title>
+</head>
+<body>
+  <nav>
+    <a href="{% url 'dashboard' %}">Dashboard</a> |
+    <a href="{% url 'logout' %}">Logout</a>
+  </nav>
+  <hr>
+  {% block content %}
+  {% endblock %}
+</body>
+</html>

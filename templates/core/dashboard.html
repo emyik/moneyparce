@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Dashboard</h2>
+<p>Welcome, {{ user.username }}!</p>
+
+<a href="{% url 'add_transaction' %}">➕ Add Transaction</a>
+
+<h3>Transactions</h3>
+<ul>
+  {% for t in transactions %}
+    <li>{{ t.date }} - {{ t.type }} - ${{ t.amount }} - {{ t.category }}</li>
+  {% empty %}
+    <li>No transactions yet.</li>
+  {% endfor %}
+</ul>
+
+<h3>Budgets</h3>
+<ul>
+  {% for b in budgets %}
+    <li>{{ b.category.name }}: ${{ b.amount }}</li>
+  {% empty %}
+    <li>No budgets yet.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
