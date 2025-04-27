@@ -1,5 +1,5 @@
 # core/views.py
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from .models import Transaction, Budget, Category
 from .forms import TransactionForm
@@ -8,7 +8,16 @@ from .forms import CategoryForm
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST
 from django.contrib import messages
+from django.http import HttpResponseRedirect, JsonResponse
+from dotenv import load_dotenv
+import os
+from google import genai
 
+load_dotenv()
+
+api_key1 = os.getenv('GEMINI_API_KEY')
+
+client = genai.Client(api_key=api_key1)
 @login_required
 def dashboard(request):
     categories = Category.objects.filter(user=request.user)
@@ -175,3 +184,12 @@ def edit_category(request, pk):
         'form': form,
         'category': category
     })
+
+@login_required
+def generate_financial_tips(request):
+    if request.method == 'GET':
+        output = client.models.generate_content(model="gemini-2.0-flash",contents="Provide a one to two sentence personal finance tip. Try not to make it too basic and be intriguing.")
+        print(output)
+        text_output = output.text
+        print(text_output)
+        return JsonResponse({'text': text_output})
