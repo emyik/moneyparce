@@ -73,4 +73,27 @@
     </div>
   </div>
 </div>
+    <div class="text-center my-5">
+    <button id="generate-tip-btn" class="btn btn-primary mb-3">✨ Get a Financial Tip</button>
+    <div id="tip-result" class="mt-3"></div>
+</div>
+
+<script>
+document.getElementById('generate-tip-btn').addEventListener('click', function() {
+    fetch("{% url 'generate_financial_tips' %}")
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('tip-result').innerHTML = `
+            <div class="alert alert-info">${data.text}</div>
+        `;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('tip-result').innerHTML = `
+            <div class="alert alert-danger">Something went wrong. Please try again!</div>
+        `;
+    });
+});
+</script>
+
 {% endblock %}

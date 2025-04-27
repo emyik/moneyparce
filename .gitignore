@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 /cart/migrations/0001_initial.py
 /cart/migrations/0002_item.py
+.env
