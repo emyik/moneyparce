@@ -12,6 +12,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from dotenv import load_dotenv
 import os
 from google import genai
+from django.db.models import Sum
 
 load_dotenv()
 
@@ -193,3 +194,30 @@ def generate_financial_tips(request):
         text_output = output.text
         print(text_output)
         return JsonResponse({'text': text_output})
+
+def financial_report(request):
+    categories = Category.objects.all()
+    report_data = []
+
+    for category in categories:
+        income = Transaction.objects.filter(user=request.user, category=category, type='income').aggregate(total=Sum('amount'))['total'] or 0
+        expenses = Transaction.objects.filter(user=request.user, category=category, type='expense').aggregate(total=Sum('amount'))['total'] or 0
+        budget = Budget.objects.filter(category=category).first()
+
+        if budget:
+            over_budget = expenses > budget.amount
+        else:
+            over_budget = None  # No budget set
+
+        report_data.append({
+            'category': category.name,
+            'income': income,
+            'expenses': expenses,
+            'budget': budget.amount if budget else "No budget set",
+            'over_budget': over_budget,
+        })
+
+    context = {
+        'report_data': report_data
+    }
+    return render(request, 'core/financial_report.html', context)

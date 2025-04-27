@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Financial Report</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Income</th>
+            <th>Expenses</th>
+            <th>Budget</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in report_data %}
+        <tr>
+            <td>{{ item.category }}</td>
+            <td>${{ item.income }}</td>
+            <td>${{ item.expenses }}</td>
+            <td>
+                {% if item.budget == "No budget set" %}
+                    {{ item.budget }}
+                {% else %}
+                    ${{ item.budget }}
+                {% endif %}
+            </td>
+            <td>
+                {% if item.over_budget == None %}
+                    No budget
+                {% elif item.over_budget %}
+                    <span style="color: red;">Over Budget</span>
+                {% else %}
+                    <span style="color: green;">Within Budget</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -16,4 +16,5 @@ urlpatterns = [
     path('categories/manage/', views.category_manager, name='category_manager'),
     path('categories/<int:pk>/edit/', views.edit_category, name='edit_category'),
     path('generate_financial_tips/', views.generate_financial_tips, name='generate_financial_tips'),
+    path('financial_report/', views.financial_report, name='financial_report'),
 ]
