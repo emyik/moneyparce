@@ -3,3 +3,4 @@ __pycache__/
 /cart/migrations/0001_initial.py
 /cart/migrations/0002_item.py
 .env
+db.sqlite3
