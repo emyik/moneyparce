@@ -41,27 +41,27 @@ def dashboard(request):
 @login_required
 def add_transaction(request):
     if request.method == 'POST':
-        form = TransactionForm(request.POST)
+        form = TransactionForm(request.POST, user=request.user)
         if form.is_valid():
             transaction = form.save(commit=False)
             transaction.user = request.user
             transaction.save()
             return redirect('dashboard')
     else:
-        form = TransactionForm()
+        form = TransactionForm(user=request.user)
     return render(request, 'core/add_transaction.html', {'form': form})
 
 @login_required
 def add_budget(request):
     if request.method == 'POST':
-        form = BudgetForm(request.POST)
+        form = BudgetForm(request.POST, user=request.user)
         if form.is_valid():
             budget = form.save(commit=False)
             budget.user = request.user
             budget.save()
             return redirect('dashboard')
     else:
-        form = BudgetForm()
+        form = BudgetForm(user=request.user)
     return render(request, 'core/add_budget.html', {'form': form})
 
 @login_required
@@ -98,13 +98,13 @@ def edit_transaction(request, pk):
     transaction = get_object_or_404(Transaction, pk=pk, user=request.user)
 
     if request.method == 'POST':
-        form = TransactionForm(request.POST, instance=transaction)
+        form = TransactionForm(request.POST, instance=transaction, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, "Transaction updated successfully.")
             return redirect('transaction_detail', pk=transaction.pk)
     else:
-        form = TransactionForm(instance=transaction)
+        form = TransactionForm(instance=transaction, user=request.user)
 
     return render(request, 'core/edit_transaction.html', {'form': form, 'transaction': transaction})
 
@@ -124,13 +124,13 @@ def edit_budget(request, pk):
     budget = get_object_or_404(Budget, pk=pk, user=request.user)
 
     if request.method == 'POST':
-        form = BudgetForm(request.POST, instance=budget)
+        form = BudgetForm(request.POST, instance=budget, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, "Budget updated successfully.")
             return redirect('dashboard')
     else:
-        form = BudgetForm(instance=budget)
+        form = BudgetForm(instance=budget, user=request.user)
 
     return render(request, 'core/edit_budget.html', {'form': form, 'budget': budget})
 
@@ -196,13 +196,13 @@ def generate_financial_tips(request):
         return JsonResponse({'text': text_output})
 
 def financial_report(request):
-    categories = Category.objects.all()
+    categories = Category.objects.filter(user=request.user)
     report_data = []
 
     for category in categories:
         income = Transaction.objects.filter(user=request.user, category=category, type='income').aggregate(total=Sum('amount'))['total'] or 0
         expenses = Transaction.objects.filter(user=request.user, category=category, type='expense').aggregate(total=Sum('amount'))['total'] or 0
-        budget = Budget.objects.filter(category=category).first()
+        budget = Budget.objects.filter(user=request.user, category=category).first()
 
         if budget:
             over_budget = expenses > budget.amount
