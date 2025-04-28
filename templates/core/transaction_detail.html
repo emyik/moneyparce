@@ -13,8 +13,8 @@
   </div>
 </div>
 
-<a href="{% url 'edit_transaction' transaction.pk %}" class="btn btn-outline-primary me-2">✏️ Edit Transaction</a>
-<a href="{% url 'delete_transaction' transaction.pk %}" class="btn btn-outline-primary me-2">🗑️ Delete Transaction</a>
+<a href="{% url 'edit_transaction' transaction.pk %}" class="btn btn-outline-primary me-2">Edit Transaction</a>
+<a href="{% url 'delete_transaction' transaction.pk %}" class="btn btn-outline-primary me-2">Delete Transaction</a>
 
 <a href="{% url 'dashboard' %}" class="btn btn-link mt-3">← Back to Dashboard</a>
 {% endblock %}

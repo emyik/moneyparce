@@ -207,7 +207,7 @@ def financial_report(request):
         if budget:
             over_budget = expenses > budget.amount
         else:
-            over_budget = None  # No budget set
+            over_budget = None
 
         report_data.append({
             'category': category.name,
